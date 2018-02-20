@@ -1,6 +1,9 @@
-## NBA_Fantasy_Winner
+# NBA_Fantasy_Winner
 
-# Feature Ideas
+## Feature Ideas
 - W/L and diff
-- W/L and diffa vs top 8 in confs and not top 8 
+- W/L and diff vs top 8 in confs and not top 8 
 - Steaks
+
+## Data Sources/Types
+- ?
