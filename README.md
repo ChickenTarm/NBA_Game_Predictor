@@ -8,6 +8,7 @@ Currently unimplemented, but will most likely use an online algorithm that will 
 - W/L and diff
 - W/L and diff vs top 8 in confs and not top 8 
 - Steaks
+- Which team is the home team.
 
 ## Data Sources/Types
 - ?
