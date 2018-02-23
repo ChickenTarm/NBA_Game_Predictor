@@ -16,8 +16,10 @@ Current season stats:
 - Which team is the home team
 - Average team point different against oppenent
 - Starting 5 player stats
+- Starting 5 player stats for the past X games and average
 - Team record against each other
 - Team and player stats when they played before earlier in the season
+- How many days ago did each team previously play in the current season
 Maybe:
 - Bench stats team/individual
 ## Data Sources/Types
