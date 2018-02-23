@@ -2,6 +2,7 @@
 
 ## Authors
 [Tarmily Wen](https://github.com/ChickenTarm)
+and
 [Andrew Petrosky](https://github.com/ajpetrosky)
 
 ## What is this?
