@@ -18,4 +18,4 @@ Algorithms, libraries, data, etc.
 List final features here
 
 ## Results
-Discuss results we saw
+Discuss results we saw such as our predictors overall record once it goes live?
