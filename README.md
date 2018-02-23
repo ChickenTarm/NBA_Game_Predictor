@@ -21,6 +21,7 @@ Current season stats:
 - Team record against each other
 - Team and player stats when they played before earlier in the season
 - How many days ago did each team previously play in the current season
+- Comeback from injury? How many days
 
 Maybe:
 - Bench stats team/individual
