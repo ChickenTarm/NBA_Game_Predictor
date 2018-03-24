@@ -18,6 +18,7 @@ Current season stats:
 - Comeback from injury? How many days
 - Average opponent stats
 - Days since last game
+- Travel distance for away team
 
 Maybe:
 - Bench stats team/individual
