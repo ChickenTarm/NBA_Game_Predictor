@@ -1,32 +1,17 @@
 import requests
 import json
+import os
 from bs4 import BeautifulSoup
-from datetime import datetime
+from argparse import ArgumentParser
 
 
-class Game_Player(object):
-
-    def __init__(self, name):
-        self.name = name
-
-
-
-def box_score_parser(url):
+def box_score_parser(url, season, playoffs):
     bs_resp = requests.get(url)
 
     if bs_resp.ok:
         bs_parser = BeautifulSoup(bs_resp.text, "html.parser")
 
         headline = bs_parser.find_all('h1')[0].get_text()
-
-        date_start = headline.find(', ')
-
-        date = datetime.strptime(headline[date_start + 2:], "%B %d, %Y")
-
-        if date.month > 8:
-            season = date.year + 1
-        else:
-            season = date.year
 
         headline_split = headline.split(' at ')
 
@@ -76,11 +61,15 @@ def box_score_parser(url):
                     home_team[name][stat_name] = info
 
         game = {}
+
+        game["home"] = home_name
+        game["away"] = away_name
+
         game["home_score"] = home_pts
         game["away_score"] = away_pts
 
-        game["home"] = home_team
-        game["away"] = away_team
+        game["home_team"] = home_team
+        game["away_team"] = away_team
 
         last_slash = url.rfind('/')
 
@@ -143,16 +132,61 @@ def box_score_parser(url):
     else:
         print("Bad Box Score url: " + url)
 
-    json.dump(game, open("../data/nba/" + str(season) + "/" + url[last_slash + 1:-5] + ".json", 'w'), indent=4)
-
+    if playoffs:
+        json.dump(game, open("../data/nba/" + season + "/playoffs/" + url[last_slash + 1:-5] + ".json", 'w'), indent=4)
+    else:
+        json.dump(game, open("../data/nba/" + season + "/regular/" + url[last_slash + 1:-5] + ".json", 'w'), indent=4)
 
 
 def main():
 
-    url = "https://www.basketball-reference.com/boxscores/201611010CLE.html"
+    parser = ArgumentParser()
+    parser.add_argument("-season", default="2017")
+    args = parser.parse_args()
 
-    box_score_parser(url)
+    season_year = args.season
 
+    season_url = "https://www.basketball-reference.com/leagues/NBA_" + season_year + "_games.html"
+
+    playoffs = False
+
+    resp = requests.get(season_url)
+
+    reg_folder = "../data/nba/" + season_year + "/regular/"
+    po_folder = "../data/nba/" + season_year + "/playoffs/"
+    reg_directory = os.path.dirname(reg_folder)
+    po_directory = os.path.dirname(po_folder)
+
+    if not os.path.exists(reg_directory):
+        os.makedirs(reg_directory)
+    if not os.path.exists(po_directory):
+        os.makedirs(po_directory)
+
+    if resp.ok:
+        season_parser = BeautifulSoup(resp.text, 'html.parser')
+
+        month_buttons = [d.find('a') for d in season_parser.find_all('div', class_='filter')[0].find_all('div')]
+
+        for month in month_buttons:
+            month_url = "https://www.basketball-reference.com" + month['href']
+
+            m_resp = requests.get(month_url)
+
+            month_parser = BeautifulSoup(m_resp.text, 'html.parser')
+
+            game_table = month_parser.select('div table tbody')[0]
+
+            game_rows = game_table.find_all('tr')
+
+            for game in game_rows:
+                cls = game.get("class")
+                if not cls is None:
+                    playoffs = True
+                else:
+                    bs_url = "https://www.basketball-reference.com" + game.find_all('td')[5].find('a')['href']
+                    box_score_parser(bs_url, playoffs)
+    else:
+        print("Bad Season url: " + season_url)
 
 
 if __name__ == "__main__":
