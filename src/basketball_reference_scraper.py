@@ -184,7 +184,7 @@ def main():
                     playoffs = True
                 else:
                     bs_url = "https://www.basketball-reference.com" + game.find_all('td')[5].find('a')['href']
-                    box_score_parser(bs_url, playoffs)
+                    box_score_parser(bs_url, season_year, playoffs)
     else:
         print("Bad Season url: " + season_url)
 

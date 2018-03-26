@@ -19,6 +19,8 @@ Current season stats:
 - Average opponent stats
 - Days since last game
 - Travel distance for away team
+- Away game stretch
+- Current game a transition game from home->away or away->home
 
 Maybe:
 - Bench stats team/individual
