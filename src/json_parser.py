@@ -12,9 +12,9 @@ import json
 import os
 
 
-def parse(season, season_type):
+def parse(season):
     games = []
-    prefix = "../data/nba/" + season + "/" + season_type + "/"
+    prefix = "../data/" + season + "/"
     for game_file in os.listdir(prefix):
         game_file = os.fsdecode(game_file)
         with open(prefix + game_file) as game:
@@ -24,7 +24,10 @@ def parse(season, season_type):
     return games
 
 
-def parse_season(season):
-    regular_season = parse(season, "regular")
-    post_season = parse(season, "playoffs")
-    return regular_season, post_season
+def parse_seasons():
+    seasons = ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017"]
+    season_stats = {}
+    for season in seasons:
+        season_dat = parse(season)
+        season_stats[season] = season_dat
+    return season_stats
