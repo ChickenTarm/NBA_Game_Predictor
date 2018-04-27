@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a3529416-0245-444f-9759-e6dc841317f4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/json_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/json_parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/basketball_reference_scraper.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/br_scraper.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,7 +19,7 @@
       <file leaf-file-name="json_parser.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/json_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="826">
+            <state relative-caret-position="716">
               <caret line="76" column="23" selection-start-line="76" selection-start-column="23" selection-end-line="76" selection-end-column="23" />
               <folding>
                 <element signature="e#324#335#0" expanded="true" />
@@ -175,7 +174,7 @@
     <entry file="file://$PROJECT_DIR$/src/test.json">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/basketball_reference_scraper.py">
+    <entry file="file://$PROJECT_DIR$/src/br_scraper.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2413">
           <caret line="192" column="10" selection-start-line="192" selection-start-column="10" selection-end-line="192" selection-end-column="10" />
@@ -206,7 +205,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/json_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="826">
+        <state relative-caret-position="716">
           <caret line="76" column="23" selection-start-line="76" selection-start-column="23" selection-end-line="76" selection-end-column="23" />
           <folding>
             <element signature="e#324#335#0" expanded="true" />
