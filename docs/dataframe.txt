@@ -1,0 +1,7 @@
+N_game_results: Stores that season's game results and has the columns: away  away_score      date                    home  home_score
+
+N_individual_player_game_stats: Stores that season's games, where a single entry is a player's performance that night. Columns: ast  ast_pct  blk  blk_pct      date  def_rtg   drb  drb_pct  efg_pct    fg  fg3  fg3_pct  fg3a  fg3a_per_fga_pct  fg_pct   fga    ft  ft_pct   fta  fta_per_fga_pct         mp                name  off_rtg  orb  orb_pct   pf  plus_minus   pts  stl  stl_pct  tov  tov_pct   trb  trb_pct  ts_pct  usg_pct
+
+N_team_game_stats: Stores that season's team stats for that game. Columns: date   drb    fg  fg3a   fga   fta          mp   orb                    team   tov
+
+N_team_player: Stores who plays for which team on any given date during that season. Columns: date              player                 team
