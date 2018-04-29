@@ -31,7 +31,7 @@ def parse(season):
                                  "shooting": game_dict["away_shooting"]}
 
             # If a player does not play, the stats value for them will be set to None
-            dnp = ["", "Did Not Play", "Did Not Dress", "Player Suspended", "Not With Team"]
+            dnp = ["Did Not Play", "Did Not Dress", "Player Suspended", "Not With Team"]
 
             home_players = {}
             for (player, stats) in game_dict["home_team"].items():
@@ -39,6 +39,8 @@ def parse(season):
                     if stat_v in dnp:
                         stats = None
                         break
+                    elif stat_v == "":
+                        stats[stat] = 0.0
                     elif stat != "mp":
                         stats[stat] = float(stat_v)
                     else:
@@ -54,6 +56,8 @@ def parse(season):
                     if stat_v in dnp:
                         stats = None
                         break
+                    elif stat_v == "":
+                        stats[stat] = 0.0
                     elif stat != "mp":
                         stats[stat] = float(stat_v)
                     else:
