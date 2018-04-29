@@ -28,10 +28,11 @@ def main():
     pd.set_option('expand_frame_repr', False)
     pd.set_option('display.max_columns', 500)
 
-    game_results_df = pd.read_pickle("2010_game_results")
-    player_game_stats_df = pd.read_pickle("2010_individual_player_game_stats")
-    team_game_stats_df = pd.read_pickle("2010_team_game_stats")
-    team_player_df = pd.read_pickle("2010_team_player")
+    game_results_df = pd.read_pickle("../dataframes/2010/2010_game_results")
+    player_game_stats_df = pd.read_pickle("../dataframes/2010/2010_individual_player_game_stats")
+    team_game_stats_df = pd.read_pickle("../dataframes/2010/2010_team_game_stats")
+    team_player_df = pd.read_pickle("../dataframes/2010/2010_team_player")
+
     print(game_results_df)
     print(team_game_stats_df)
     print(player_game_stats_df)
