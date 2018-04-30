@@ -1,5 +1,5 @@
 # NBA Game Predictor
-# File: baseline.py
+# File: svm.py
 # Authors: Tarmily Wen & Andrew Petrosky
 #
 # A basic SVM predictor based only on the home
@@ -9,6 +9,6 @@ from sklearn.svm import SVC
 
 
 def model(train_x, train_y):
-    clf = SVC()
+    clf = SVC(kernel='sigmoid')
     clf.fit(train_x, train_y)
     return clf

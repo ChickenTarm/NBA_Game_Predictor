@@ -5,15 +5,25 @@
 # A baseline predictor based purely of winning percentage
 
 
-def model():
+def model(train_x, train_y, test_x, test_y):
     # Train test
-    for season in ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017"]:
-        prefix = "../../data/" + season + "/"
-        for game_file in os.listdir(prefix):
-            game_file = os.fsdecode(game_file)[:-5]
-            home_win_pct = v[0]
-            away_win_pct = v[1]
-            if home_win_pct < away_win_pct:
-                return 0
-            else:
-                return 1
+    print("Testing on training data...")
+    correct = 0.0
+    total = 0.0
+    for i in range(len(train_x)):
+        t = 0 if train_x[i][0] < train_x[i][1] else 1
+        if t == train_y[i]:
+            correct += 1.0
+        total += 1.0
+    acc = correct / total
+    print("Training Accuracy = " + str(acc))
+    print("Testing on test data...")
+    correct = 0.0
+    total = 0.0
+    for i in range(len(test_x)):
+        t = 0 if test_x[i][0] < test_x[i][1] else 1
+        if t == test_y[i]:
+            correct += 1.0
+        total += 1.0
+    acc = correct / total
+    print("Testing Accuracy = " + str(acc))
