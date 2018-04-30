@@ -8,5 +8,7 @@
 from sklearn.svm import SVC
 
 
-def predict(v):
-    pass
+def model(train_x, train_y):
+    clf = SVC()
+    clf.fit(train_x, train_y)
+    return clf

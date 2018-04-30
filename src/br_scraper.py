@@ -135,7 +135,8 @@ def box_score_parser(url, season, playoffs):
     if playoffs:
         json.dump(game, open("../data/nba/" + season + "/playoffs/" + url[last_slash + 1:-5] + ".json", 'w'), indent=4)
     else:
-        json.dump(game, open("../data/nba/" + season + "/regular/" + url[last_slash + 1:-5] + ".json", 'w'), indent=4)
+        # json.dump(game, open("../data/nba/" + season + "/regular/" + url[last_slash + 1:-5] + ".json", 'w'), indent=4)
+        json.dump(game, open("../data/" + season + "/" + url[last_slash + 1:-5] + ".json", 'w'), indent=4)
 
 
 def main():
@@ -152,15 +153,19 @@ def main():
 
     resp = requests.get(season_url)
 
-    reg_folder = "../data/nba/" + season_year + "/regular/"
-    po_folder = "../data/nba/" + season_year + "/playoffs/"
-    reg_directory = os.path.dirname(reg_folder)
-    po_directory = os.path.dirname(po_folder)
+    folder = "../data/" + season_year + "/"
+    # reg_folder = "../data/nba/" + season_year + "/regular/"
+    # po_folder = "../data/nba/" + season_year + "/playoffs/"
+    directory = os.path.dirname(folder)
+    # reg_directory = os.path.dirname(reg_folder)
+    # po_directory = os.path.dirname(po_folder)
 
-    if not os.path.exists(reg_directory):
-        os.makedirs(reg_directory)
-    if not os.path.exists(po_directory):
-        os.makedirs(po_directory)
+    if not os.path.exists(directory):
+          os.makedirs(directory)
+    # if not os.path.exists(reg_directory):
+    #     os.makedirs(reg_directory)
+    # if not os.path.exists(po_directory):
+    #     os.makedirs(po_directory)
 
     if resp.ok:
         season_parser = BeautifulSoup(resp.text, 'html.parser')
@@ -180,11 +185,12 @@ def main():
 
             for game in game_rows:
                 cls = game.get("class")
-                if not cls is None:
-                    playoffs = True
-                else:
-                    bs_url = "https://www.basketball-reference.com" + game.find_all('td')[5].find('a')['href']
-                    box_score_parser(bs_url, season_year, playoffs)
+                # if not cls is None:
+                #     playoffs = True
+                playoffs = False
+                # else:
+                bs_url = "https://www.basketball-reference.com" + game.find_all('td')[5].find('a')['href']
+                box_score_parser(bs_url, season_year, playoffs)
     else:
         print("Bad Season url: " + season_url)
 
