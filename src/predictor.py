@@ -6,7 +6,7 @@
 # the requested model to make the prediction
 
 from src.vectors import get_vector
-import src.baseline as baseline
+import src.predictors.baseline as baseline
 
 
 def predict(date, home, away, predictor):
