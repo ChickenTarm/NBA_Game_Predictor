@@ -41,7 +41,11 @@ class Data(object):
                     away_wins += 1
                 else:
                     away_losses += 1
-        return home_wins, home_losses, away_wins, away_losses, (home_wins + away_wins) / num_games
+        if num_games == 0:
+            win_pct = 0
+        else:
+            win_pct = (home_wins + away_wins) / num_games
+        return home_wins, home_losses, away_wins, away_losses, win_pct
 
     def get_vector(self, date, home, away, form):
         date_obj = parser.parse(date)
@@ -55,3 +59,18 @@ class Data(object):
             home_hw, home_hl, home_aw, home_al, home_wp = self.get_record_from_most_recent_games(self.data_dict[season]["gr_df"], home, date)
             away_hw, away_hl, away_aw, away_al, away_wp = self.get_record_from_most_recent_games(self.data_dict[season]["gr_df"], away, date)
             return [home_wp, away_wp]
+        if (form == "record"):
+            home_hw, home_hl, home_aw, home_al, home_wp = self.get_record_from_most_recent_games(self.data_dict[season]["gr_df"], home, date)
+            away_hw, away_hl, away_aw, away_al, away_wp = self.get_record_from_most_recent_games(self.data_dict[season]["gr_df"], away, date)
+            return [home_hw, home_hl, home_aw, home_al, home_wp, away_hw, away_hl, away_aw, away_al, away_wp]
+
+    def get_season_data(self, season, form):
+        X = []
+        Y = []
+        for index, game in self.data_dict[season]["gr_df"].iterrows():
+            X.append(self.get_vector(game["date"], game["home"], game["away"], form))
+            if game["home_score"] > game["away_score"]:
+                Y.append(1)
+            else:
+                Y.append(0)
+        return X, Y

@@ -41,7 +41,9 @@ def main():
 
     data = Data()
 
-    data.get_vector('20091103', 'Cleveland Cavaliers', 'Washington Wizards', 'win_pct')
+    # data.get_vector('20091103', 'Cleveland Cavaliers', 'Washington Wizards', 'win_pct')
+
+    data.get_season_data("2010", "win_pct")
 
     roster_cavs_most_recent = get_roster_from_most_recent_game(team_player_df, 'Cleveland Cavaliers', '20091103')
     roster_wiz_most_recent = get_roster_from_most_recent_game(team_player_df, 'Washington Wizards', '20091103')
