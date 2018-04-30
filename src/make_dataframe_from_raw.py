@@ -1,5 +1,5 @@
 # NBA Game Predictor
-# File: json_parser.py
+# File: make_dataframe_from_raw.py
 # Authors: Tarmily Wen & Andrew Petrosky
 #
 # Takes the parsed seasons and creates dataframes from them
