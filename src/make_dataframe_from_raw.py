@@ -105,14 +105,6 @@ def main():
         game_results_df.to_pickle("../dataframes/" + str(season) + "/" + str(season) + "_game_results")
         team_game_stats_df.to_pickle("../dataframes/" + str(season) + "/" + str(season) + "_team_game_stats")
 
-        # print(game_results_df)
-        # print(team_game_stats_df)
-        #
-        # roster_cavs_most_recent = get_roster_from_most_recent_game(team_player_df, 'Cleveland Cavaliers', '20091031')
-        # print(roster_cavs_most_recent)
-        # player_season_to_date_stat(player_game_df, 'James,LeBron', '20091031')
-
-
 
 if __name__ == "__main__":
     main()
