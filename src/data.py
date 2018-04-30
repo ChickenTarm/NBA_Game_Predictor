@@ -47,13 +47,7 @@ class Data(object):
             win_pct = (home_wins + away_wins) / num_games
         return home_wins, home_losses, away_wins, away_losses, win_pct
 
-    def get_vector(self, date, home, away, form):
-        date_obj = parser.parse(date)
-        season_start = str(date_obj.year) + "0820"
-        if date > season_start:
-            season = str(date_obj.year + 1)
-        else:
-            season = str(date_obj.year)
+    def get_vector(self, date, home, away, season, form):
 
         if (form == "win_pct"):
             home_hw, home_hl, home_aw, home_al, home_wp = self.get_record_from_most_recent_games(self.data_dict[season]["gr_df"], home, date)
@@ -68,7 +62,7 @@ class Data(object):
         X = []
         Y = []
         for index, game in self.data_dict[season]["gr_df"].iterrows():
-            X.append(self.get_vector(game["date"], game["home"], game["away"], form))
+            X.append(self.get_vector(game["date"], game["home"], game["away"], season, form))
             if game["home_score"] > game["away_score"]:
                 Y.append(1)
             else:
