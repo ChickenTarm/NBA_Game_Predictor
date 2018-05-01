@@ -13,9 +13,36 @@ from torch.utils.data import Dataset, DataLoader
 from torch.autograd import Variable
 
 
-class Net(nn.Module):
+class NetA(nn.Module):
     def __init__(self):
-        super(Net, self).__init__()
+        super(NetA, self).__init__()
+        self.conv1 = nn.Conv1d(82, 128, 2)
+        self.pool1 = nn.MaxPool1d(2)
+        self.conv2 = nn.Conv1d(128, 256, 1)
+        self.fc1 = nn.Linear(512, 600)
+        self.fc2 = nn.Linear(600, 150)
+        self.fc3 = nn.Linear(150, 82)
+
+    def forward(self, x):
+        x = x.unsqueeze(0)
+        out = F.relu(self.conv1(x))
+        # out = self.pool1(out)
+        out = F.relu(self.conv2(out))
+
+        out = out.view(out.size(0), -1)
+        out = F.relu(self.fc1(out))
+
+        out = out.view(out.size(0), -1)
+        out = F.relu(self.fc2(out))
+
+        out = out.view(out.size(0), -1)
+        out = F.relu(self.fc3(out))
+        return out
+
+
+class NetB(nn.Module):
+    def __init__(self):
+        super(NetB, self).__init__()
         self.conv1 = nn.Conv1d(82, 128, 3)
         self.pool1 = nn.MaxPool1d(2)
         self.conv2 = nn.Conv1d(128, 256, 3)
@@ -45,7 +72,6 @@ def train(net, loader, criterion, max_epochs, lr):
     optimizer = optim.SGD(net.parameters(), lr=lr, momentum=0.9)
     loss_np = np.zeros(max_epochs)
     accuracy = np.zeros(max_epochs)
-    k = 0
     for epoch in range(max_epochs):
         acc = 0.0
         j = 0
@@ -82,7 +108,7 @@ def train(net, loader, criterion, max_epochs, lr):
             loss_np[epoch] = loss.data.numpy()
         acc = acc / float(j)
         accuracy[epoch] = acc
-    print("Training Accuracy = ", accuracy[k])
+    print("Training Accuracy = ", accuracy[max_epochs - 1])
 
 
 # Test net
@@ -106,12 +132,11 @@ def test(net, loader):
                 correct += 1
             total += 1
 
-    
     acc = float(correct) / float(total)
     print("Testing Accuracy = " + str(acc))
 
 
-def model(train_x, train_y, test_x, test_y):
+def model(train_x, train_y, test_x, test_y, type):
     class DS(Dataset):
         def __init__(self):
             self.len = test_x.shape[0]
@@ -136,7 +161,7 @@ def model(train_x, train_y, test_x, test_y):
         def __getitem__(self, idx):
             return self.x_data[idx], self.y_data[idx]
 
-    net = Net()
+    net = NetA() if type == "advanced" else NetB()
 
     # Specify the training data sets
     dataset = DS()
@@ -147,8 +172,8 @@ def model(train_x, train_y, test_x, test_y):
     test_loader = DataLoader(dataset=testdataset, batch_size=82)
 
     # Specify the parameters
-    lr = 0.001
-    max_epochs = 1000
+    lr = 0.01
+    max_epochs = 100
     criterion = nn.CrossEntropyLoss()
 
     train(net, train_loader, criterion, max_epochs, lr)

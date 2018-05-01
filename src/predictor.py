@@ -88,7 +88,7 @@ def predictor(pred):
         train_y = np.array(train_y)
         test_x = np.array(test_x)
         test_y = np.array(test_y)
-        nn.model(train_x, train_y, test_x, test_y)
+        nn.model(train_x, train_y, test_x, test_y, "basic")
     else:
         print("Not an implemented predictor.")
 
