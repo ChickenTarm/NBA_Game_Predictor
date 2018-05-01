@@ -115,6 +115,8 @@ def main():
     cumulative_keys.remove("name")
     cumulative_keys.remove("date")
 
+    print(cumulative_keys)
+
     cum_stat_names = ['name', 'date', 'ast', 'blk', 'def_rtg', 'drb', 'fg', 'fg3', 'fg3a', 'fga', 'ft', 'fta', 'mp',
                       'off_rtg', 'orb', 'pf', 'plus_minus', 'pts', 'stl', 'tov', 'trb', 'ast_pg', 'blk_pg', 'def_rtg_pg', 'drb_pg', 'fg_pg',
                       'fg3_pg', 'fg3a_pg', 'fga_pg', 'ft_pg', 'fta_pg', 'mp_pg', 'off_rtg_pg', 'orb_pg', 'pf_pg', 'pts_pg', 'stl_pg',
