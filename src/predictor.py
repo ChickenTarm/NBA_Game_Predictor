@@ -9,6 +9,7 @@ import numpy as np
 import src.predictors.baseline as baseline
 import src.predictors.svm as svm
 import src.predictors.naive_bayes as nb
+import src.predictors.neural_nets as nn
 from src.data import Data
 
 
@@ -76,17 +77,32 @@ def predictor(pred):
         test_y = np.array(test_y)
         p = nb.model(train_x, train_y)
         evaluate_model(p, train_x, train_y, test_x, test_y)
+    elif pred == "basic_nn":
+        train_x, train_y = [], []
+        for season in seasons:
+            xs, ys = data.get_season_data(season, "record")
+            train_x += xs
+            train_y += ys
+        test_x, test_y = data.get_season_data("2018", "record")
+        train_x = np.array(train_x)
+        train_y = np.array(train_y)
+        test_x = np.array(test_x)
+        test_y = np.array(test_y)
+        nn.model(train_x, train_y, test_x, test_y, "basic")
     else:
         print("Not an implemented predictor.")
 
 
 if __name__ == '__main__':
-    # Test the baseline predictor
-    print("\nTesting baseline predictor...")
-    predictor("baseline")
-    # Test the basic SVM predictor
-    print("\nTesting basic SVM predictor...")
-    predictor("basic_svm")
-    # Test the basic naive bayes predictor
-    print("\nTesting basic Naive Bayes predictor...")
-    predictor("basic_nb")
+    # # Test the baseline predictor
+    # print("\nTesting baseline predictor...")
+    # predictor("baseline")
+    # # Test the basic SVM predictor
+    # print("\nTesting basic SVM predictor...")
+    # predictor("basic_svm")
+    # # Test the basic naive bayes predictor
+    # print("\nTesting basic Naive Bayes predictor...")
+    # predictor("basic_nb")
+    # Test the basic NN predictor
+    print("\nTesting basic Neural Net predictor...")
+    predictor("basic_nn")

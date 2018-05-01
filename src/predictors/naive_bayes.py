@@ -2,8 +2,7 @@
 # File: naive_bayes.py
 # Authors: Tarmily Wen & Andrew Petrosky
 #
-# A basic naives bayes predictor based only
-# on the home and away team winning percentages
+# A naives bayes classifier
 
 from sklearn.naive_bayes import GaussianNB
 
