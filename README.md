@@ -1,5 +1,5 @@
 # NBA Game Predictor
-Website: ???
+Website: Coming soon.
 
 ## Authors
 [Tarmily Wen](https://github.com/ChickenTarm)
@@ -9,17 +9,18 @@ and
 ## What is this?
 This is a machine learning predictor for NBA games.
 
-Currently unimplemented, but will most likely use an online algorithm that will allow for updates in the current season.
-
 ## Data
-We built a scraper to get data from Basketball-reference.com
-To use the scraper just do: "python basketball_reference_scraper.py -season 2016"
+We built a scraper to get data from [Basketball Reference](https://basketball-reference.com).
 
 ## How did we do it?
-Algorithms, libraries, data, etc.
+We tested with a variety of different models, ranging from a simple baseline predictor which just predicts each game
+based off of the current win percentage of each team (great win percentage is predicted the winner) to models such as
+Gaussian Naive Bayes and SVM.
 
 ## Feature Summary
-List final features here
+* Winning Percentage
+* Home Record
+* Away Record
 
 ## Results
-Discuss results we saw such as our predictors overall record once it goes live?
+Coming soon.
