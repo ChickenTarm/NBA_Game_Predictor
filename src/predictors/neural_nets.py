@@ -43,21 +43,25 @@ class NetA(nn.Module):
 class NetB(nn.Module):
     def __init__(self):
         super().__init__()
-        self.fc1 = nn.Linear(10, 10)
-        self.relu = nn.ReLU()
-        self.drop = nn.Dropout(0.2)
-        self.fc2 = nn.Linear(10, 100)
-        self.prelu = nn.PReLU(1)
-        self.fc3 = nn.Linear(100, 1)
+        self.fc1 = nn.Linear(10, 50)
+        self.fc2 = nn.Linear(50, 1)
+        # self.relu = nn.ReLU()
+        # self.drop = nn.Dropout(0.2)
+        # self.fc2 = nn.Linear(10, 100)
+        # self.prelu = nn.PReLU(1)
+        # self.fc3 = nn.Linear(100, 50)
+        # self.fc4 = nn.Linear(50, 1)
         self.sig = nn.Sigmoid()
 
     def forward(self, x):
         out = self.fc1(x)
-        out = self.relu(out)
-        out = self.drop(out)
         out = self.fc2(out)
-        out = self.prelu(out)
-        out = self.fc3(out)
+        # out = self.relu(out)
+        # out = self.drop(out)
+        # out = self.fc2(out)
+        # out = self.prelu(out)
+        # out = self.fc3(out)
+        # out = self.fc4(out)
         out = self.sig(out)
         return out
 
@@ -74,7 +78,7 @@ def train(net, loader, criterion, max_epochs, lr):
             # Feed the input data into the network
             y_pred = net(inputs)
             # Calculate the loss using predicted labels and ground truth labels
-            loss = criterion(y_pred, labels)
+            loss = criterion(y_pred, labels.view(82, 1))
             # zero gradient
             optimizer.zero_grad()
             # backpropogates to compute gradient
@@ -84,10 +88,10 @@ def train(net, loader, criterion, max_epochs, lr):
 
 
 # Test net
-def test(net, loader):
+def test(net, test_loader, train_loader):
     correct = 0
     total = 0
-    for i, data in enumerate(loader, 0):
+    for i, data in enumerate(train_loader, 0):
         # Get inputs and labels from data loader
         inputs, labels = data
         inputs, labels = Variable(inputs.float()), Variable(labels.float())
@@ -103,12 +107,32 @@ def test(net, loader):
             if p == label_np[k, :]:
                 correct += 1
             total += 1
+    acc = float(correct) / float(total)
+    print("Testing Accuracy = " + str(acc))
 
+    correct = 0
+    total = 0
+    for i, data in enumerate(test_loader, 0):
+        # Get inputs and labels from data loader
+        inputs, labels = data
+        inputs, labels = Variable(inputs.float()), Variable(labels.float())
+        # labels = labels.long
+        # Feed the input data into the network
+        y_pred = net(inputs)
+        # convert predicted labels into numpy
+        pred_np = y_pred.data.numpy()
+        # calculate the testing accuracy of the current model
+        label_np = labels.data.numpy().reshape(len(labels), 1)
+        for k in range(pred_np.shape[0]):
+            p = np.argmax(pred_np[k, :])
+            if p == label_np[k, :]:
+                correct += 1
+            total += 1
     acc = float(correct) / float(total)
     print("Testing Accuracy = " + str(acc))
 
 
-def model(train_x, train_y, test_x, test_y, type):
+def model(train_x, train_y, test_x, test_y, t):
     class DS(Dataset):
         def __init__(self):
             self.len = test_x.shape[0]
@@ -133,7 +157,7 @@ def model(train_x, train_y, test_x, test_y, type):
         def __getitem__(self, idx):
             return self.x_data[idx], self.y_data[idx]
 
-    net = NetA() if type == "advanced" else NetB()
+    net = NetA() if t == "advanced" else NetB()
 
     # Specify the training data sets
     dataset = DS()
@@ -149,4 +173,4 @@ def model(train_x, train_y, test_x, test_y, type):
     criterion = nn.BCELoss()
 
     train(net, train_loader, criterion, max_epochs, lr)
-    test(net, test_loader)
+    test(net, test_loader, train_loader)
