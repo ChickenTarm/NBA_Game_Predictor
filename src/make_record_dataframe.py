@@ -1,6 +1,5 @@
 import pandas as pd
-# import os
-from src.data import Data
+import os
 
 
 def get_record(gr_df, date, team):
