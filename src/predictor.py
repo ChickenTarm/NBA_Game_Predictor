@@ -94,15 +94,15 @@ def predictor(pred):
 
 
 if __name__ == '__main__':
-    # # Test the baseline predictor
-    # print("\nTesting baseline predictor...")
-    # predictor("baseline")
-    # # Test the basic SVM predictor
-    # print("\nTesting basic SVM predictor...")
-    # predictor("basic_svm")
-    # # Test the basic naive bayes predictor
-    # print("\nTesting basic Naive Bayes predictor...")
-    # predictor("basic_nb")
+    # Test the baseline predictor
+    print("\nTesting baseline predictor...")
+    predictor("baseline")
+    # Test the basic SVM predictor
+    print("\nTesting basic SVM predictor...")
+    predictor("basic_svm")
+    # Test the basic naive bayes predictor
+    print("\nTesting basic Naive Bayes predictor...")
+    predictor("basic_nb")
     # Test the basic NN predictor
     print("\nTesting basic Neural Net predictor...")
     predictor("basic_nn")
