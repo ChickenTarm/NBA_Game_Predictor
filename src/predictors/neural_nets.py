@@ -16,54 +16,49 @@ from torch.autograd import Variable
 class NetA(nn.Module):
     def __init__(self):
         super(NetA, self).__init__()
-        self.conv1 = nn.Conv1d(82, 128, 2)
-        self.pool1 = nn.MaxPool1d(2)
-        self.conv2 = nn.Conv1d(128, 256, 1)
-        self.fc1 = nn.Linear(512, 600)
-        self.fc2 = nn.Linear(600, 150)
-        self.fc3 = nn.Linear(150, 82)
+        self.fc1 = nn.Linear(530, 300)
+        self.relu = nn.ReLU()
+        self.drop = nn.Dropout(0.3)
+        self.fc2 = nn.Linear(300, 100)
+        self.prelu = nn.PReLU(1)
+        self.fc3 = nn.Linear(100, 50)
+        self.fc4 = nn.Linear(50, 1)
+        self.sig = nn.Sigmoid()
 
     def forward(self, x):
-        x = x.unsqueeze(0)
-        out = F.relu(self.conv1(x))
-        # out = self.pool1(out)
-        out = F.relu(self.conv2(out))
-
-        out = out.view(out.size(0), -1)
-        out = F.relu(self.fc1(out))
-
-        out = out.view(out.size(0), -1)
-        out = F.relu(self.fc2(out))
-
-        out = out.view(out.size(0), -1)
-        out = F.relu(self.fc3(out))
-        return out
+        out0 = self.fc1(x)
+        out1 = self.relu(out0)
+        out2 = self.drop(out1)
+        out3 = self.fc2(out2)
+        out4 = self.prelu(out3)
+        out5 = self.fc3(out4)
+        out6 = self.fc4(out5)
+        out7 = self.sig(out6)
+        return out7
 
 
 class NetB(nn.Module):
     def __init__(self):
-        super().__init__()
-        self.fc1 = nn.Linear(10, 50)
-        self.fc2 = nn.Linear(50, 1)
-        # self.relu = nn.ReLU()
-        # self.drop = nn.Dropout(0.2)
-        # self.fc2 = nn.Linear(10, 100)
-        # self.prelu = nn.PReLU(1)
-        # self.fc3 = nn.Linear(100, 50)
-        # self.fc4 = nn.Linear(50, 1)
+        super(NetB, self).__init__()
+        self.fc1 = nn.Linear(10, 10)
+        self.relu = nn.ReLU()
+        self.drop = nn.Dropout(0.3)
+        self.fc2 = nn.Linear(10, 100)
+        self.prelu = nn.PReLU(1)
+        self.fc3 = nn.Linear(100, 50)
+        self.fc4 = nn.Linear(50, 1)
         self.sig = nn.Sigmoid()
 
     def forward(self, x):
-        out = self.fc1(x)
-        out = self.fc2(out)
-        # out = self.relu(out)
-        # out = self.drop(out)
-        # out = self.fc2(out)
-        # out = self.prelu(out)
-        # out = self.fc3(out)
-        # out = self.fc4(out)
-        out = self.sig(out)
-        return out
+        out0 = self.fc1(x)
+        out1 = self.relu(out0)
+        out2 = self.drop(out1)
+        out3 = self.fc2(out2)
+        out4 = self.prelu(out3)
+        out5 = self.fc3(out4)
+        out6 = self.fc4(out5)
+        out7 = self.sig(out6)
+        return out7
 
 
 # Train net
@@ -161,15 +156,15 @@ def model(train_x, train_y, test_x, test_y, t):
 
     # Specify the training data sets
     dataset = DS()
-    train_loader = DataLoader(dataset=dataset, batch_size=82)
+    train_loader = DataLoader(dataset=dataset, batch_size=82, shuffle=True)
 
     # Specify the testing data set
     testdataset = TestDataset()
     test_loader = DataLoader(dataset=testdataset, batch_size=82)
 
     # Specify the parameters
-    lr = 0.01
-    max_epochs = 100
+    lr = 0.001
+    max_epochs = 50
     criterion = nn.BCELoss()
 
     train(net, train_loader, criterion, max_epochs, lr)
