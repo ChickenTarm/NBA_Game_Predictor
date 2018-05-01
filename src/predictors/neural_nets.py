@@ -42,73 +42,45 @@ class NetA(nn.Module):
 
 class NetB(nn.Module):
     def __init__(self):
-        super(NetB, self).__init__()
-        self.conv1 = nn.Conv1d(82, 128, 3)
-        self.pool1 = nn.MaxPool1d(2)
-        self.conv2 = nn.Conv1d(128, 256, 3)
-        self.fc1 = nn.Linear(512, 600)
-        self.fc2 = nn.Linear(600, 150)
-        self.fc3 = nn.Linear(150, 82)
+        super().__init__()
+        self.fc1 = nn.Linear(10, 10)
+        self.relu = nn.ReLU()
+        self.drop = nn.Dropout(0.2)
+        self.fc2 = nn.Linear(10, 100)
+        self.prelu = nn.PReLU(1)
+        self.fc3 = nn.Linear(100, 1)
+        self.sig = nn.Sigmoid()
 
     def forward(self, x):
-        x = x.unsqueeze(0)
-        out = F.relu(self.conv1(x))
-        out = self.pool1(out)
-        out = F.relu(self.conv2(out))
-
-        out = out.view(out.size(0), -1)
-        out = F.relu(self.fc1(out))
-
-        out = out.view(out.size(0), -1)
-        out = F.relu(self.fc2(out))
-
-        out = out.view(out.size(0), -1)
-        out = F.relu(self.fc3(out))
+        out = self.fc1(x)
+        out = self.relu(out)
+        out = self.drop(out)
+        out = self.fc2(out)
+        out = self.prelu(out)
+        out = self.fc3(out)
+        out = self.sig(out)
         return out
 
 
 # Train net
 def train(net, loader, criterion, max_epochs, lr):
     optimizer = optim.SGD(net.parameters(), lr=lr, momentum=0.9)
-    loss_np = np.zeros(max_epochs)
-    accuracy = np.zeros(max_epochs)
     for epoch in range(max_epochs):
-        acc = 0.0
-        j = 0
+        net.train()
         for i, data in enumerate(loader, 0):
             # Get inputs and labels from data loader
             inputs, labels = data
-            inputs, labels = Variable(inputs), Variable(labels)
-            labels = labels.long()
+            inputs, labels = Variable(inputs.float()), Variable(labels.float())
             # Feed the input data into the network
             y_pred = net(inputs)
             # Calculate the loss using predicted labels and ground truth labels
-            loss = criterion(y_pred, labels[i])
+            loss = criterion(y_pred, labels)
             # zero gradient
             optimizer.zero_grad()
             # backpropogates to compute gradient
             loss.backward()
             # updates the weghts
             optimizer.step()
-            # convert predicted laels into numpy
-            pred_np = y_pred.data.numpy()
-            # calculate the training accuracy of the current model
-            label_np = labels.data.numpy().reshape(len(labels), 1)
-            correct = 0
-            total = 0
-            for k in range(pred_np.shape[0]):
-                p = np.argmax(pred_np[k, :])
-                if p == label_np[k, :]:
-                    correct += 1
-                total += 1
-            acc_i = float(correct) / float(total)
-            acc = acc + acc_i
-            j += 1
-
-            loss_np[epoch] = loss.data.numpy()
-        acc = acc / float(j)
-        accuracy[epoch] = acc
-    print("Training Accuracy = ", accuracy[max_epochs - 1])
 
 
 # Test net
@@ -118,8 +90,8 @@ def test(net, loader):
     for i, data in enumerate(loader, 0):
         # Get inputs and labels from data loader
         inputs, labels = data
-        inputs, labels = Variable(inputs), Variable(labels)
-        labels = labels.long()
+        inputs, labels = Variable(inputs.float()), Variable(labels.float())
+        # labels = labels.long
         # Feed the input data into the network
         y_pred = net(inputs)
         # convert predicted labels into numpy
@@ -140,8 +112,8 @@ def model(train_x, train_y, test_x, test_y, type):
     class DS(Dataset):
         def __init__(self):
             self.len = test_x.shape[0]
-            self.x_data = torch.from_numpy(train_x).float()
-            self.y_data = torch.from_numpy(train_y).float()
+            self.x_data = torch.from_numpy(train_x)
+            self.y_data = torch.from_numpy(train_y)
 
         def __len__(self):
             return self.len
@@ -152,8 +124,8 @@ def model(train_x, train_y, test_x, test_y, type):
     class TestDataset(Dataset):
         def __init__(self):
             self.len = test_x.shape[0]
-            self.x_data = torch.from_numpy(test_x).float()
-            self.y_data = torch.from_numpy(test_y).float()
+            self.x_data = torch.from_numpy(test_x)
+            self.y_data = torch.from_numpy(test_y)
 
         def __len__(self):
             return self.len
@@ -174,7 +146,7 @@ def model(train_x, train_y, test_x, test_y, type):
     # Specify the parameters
     lr = 0.01
     max_epochs = 100
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.BCELoss()
 
     train(net, train_loader, criterion, max_epochs, lr)
     test(net, test_loader)

@@ -74,10 +74,10 @@ class Data(object):
                 Y.append(1)
             else:
                 Y.append(0)
-            if index == 38:
-                print(game["date"])
-                print(game["home"])
-                print(game["away"])
-                print(X[index])
-                print(Y[index])
+            # if index == 38:
+            #     print(game["date"])
+            #     print(game["home"])
+            #     print(game["away"])
+            #     print(X[index])
+            #     print(Y[index])
         return X, Y
