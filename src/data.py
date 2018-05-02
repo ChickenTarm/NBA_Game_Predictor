@@ -27,8 +27,8 @@ class Data(object):
                         self.data_dict[year]["tr_df"] = pd.read_pickle(df_path)
                     elif "season_to_date" in df:
                         self.data_dict[year]["std_df"] = pd.read_pickle(df_path)
-
-        # print(self.data_dict["2010"]["std_df"][self.data_dict["2010"]["std_df"]["name"] == "James,LeBron"])
+                    elif "matchup_history" in df:
+                        self.data_dict[year]["mh_df"] = pd.read_pickle(df_path)
 
     def get_starters_from_last_game(self, tp_df, ipgs_df, date, team):
         most_recent = tp_df[(tp_df["team"] == team) & (tp_df['date'] < date)]["date"].max()
@@ -54,8 +54,13 @@ class Data(object):
         #     return [0] * (5 * 52)
         return team_stats
 
-    # def get_streak(self, ts_df, date, team):
-    #     ts_df[(ts_df['team'] == team) & (ts_df['date'] <= date)]
+    def get_matchip_history(self, mh_df, date, home, away):
+        history = mh_df[(((mh_df['home'] == home) | (mh_df['home'] == away)) & ((mh_df['away'] == home) | (mh_df['away'] == away))) & (mh_df['date'] <= date)]
+        last = history.iloc[-1]
+        if last["home"] == home:
+            return last["home_wins"], last["away_wins"], last["home_win_t_diff"], last["home_lose_t_diff"], last["home_win_avg_diff"], last["home_lose_avg_diff"], last["home_prev_diff"], last["home_prev_win"], last["last_match"]
+        else:
+            return last["away_wins"], last["home_wins"], -1 * last["home_win_t_diff"], -1 * last["home_lose_t_diff"], -1 * last["home_win_avg_diff"], -1 * last["home_lose_avg_diff"], -1 * last["home_prev_diff"], -1 * last["home_prev_win"], last["last_match"]
 
     def get_record_from_most_recent_games(self, tr_df, team, date):
         record = tr_df[(tr_df['team'] == team) & (tr_df['date'] <= date)]
@@ -85,6 +90,11 @@ class Data(object):
             home_hw, home_hl, home_aw, home_al, home_wp, home_streak = self.get_record_from_most_recent_games(self.data_dict[season]["tr_df"], home, date)
             away_hw, away_hl, away_aw, away_al, away_wp, away_streak = self.get_record_from_most_recent_games(self.data_dict[season]["tr_df"], away, date)
             return [home_hw, home_hl, home_aw, home_al, home_wp, home_streak, away_hw, away_hl, away_aw, away_al, away_wp, away_streak]
+        if form == "matchup":
+            home_hw, home_hl, home_aw, home_al, home_wp, home_streak = self.get_record_from_most_recent_games(self.data_dict[season]["tr_df"], home, date)
+            away_hw, away_hl, away_aw, away_al, away_wp, away_streak = self.get_record_from_most_recent_games(self.data_dict[season]["tr_df"], away, date)
+            home_mw, away_mw, home_wtd, home_ltd, home_wad, home_lad, home_pwd, home_pw, lm = self.get_matchip_history(self.data_dict[season]["mh_df"], date, home, away)
+            return [home_hw, home_hl, home_aw, home_al, home_wp, home_streak, away_hw, away_hl, away_aw, away_al, away_wp, away_streak, home_mw, away_mw, home_wtd, home_ltd, home_wad, home_lad, home_pwd, home_pw, lm]
 
     def get_season_data(self, season, form):
         X = []
@@ -95,12 +105,6 @@ class Data(object):
                 Y.append(1)
             else:
                 Y.append(0)
-            # if index == 50:
-            #     print(game["home"])
-            #     print(game["away"])
-            #     print(X[index])
-            #     print(Y[index])
-            #     return X, Y
         return X, Y
 
 
@@ -132,17 +136,17 @@ def main():
     #         seasons.append(year)
     #
     # for season in seasons:
-    #     X, Y = data.get_season_data(season, "streak")
+    #     X, Y = data.get_season_data(season, "matchup")
     #
     #     np_x = np.array(X)
     #     np_y = np.array(Y)
     #
     #     print(np_x.shape)
     #
-    #     np.save("../labels/" + season + "/" + season + "_streak_vectors", np_x)
+    #     np.save("../labels/" + season + "/" + season + "_matchup_vectors", np_x)
     #     np.save("../labels/" + season + "/" + season + "_labels", np_y)
 
-    season = "2010"
+    # season = "2010"
     #
     # X, Y = data.get_season_data(season, "rec_cum_stat")
     #
@@ -161,6 +165,17 @@ def main():
     # np_x = np.load("../labels/" + season + "/" + season + "_streak_vectors.npy")
     #
     # print(np_x[38, :])
+
+    # season = "2010"
+    #
+    # date = "20101117"
+    # away = "Los Angeles Lakers"
+    # home = "Boston Celtics"
+    #
+    # mh_df = pd.read_pickle("../dataframes/" + season + "/" + season + "_matchup_history")
+    #
+    # print(data.get_matchip_history(mh_df, date, home, away))
+
 
 if __name__ == "__main__":
     main()
