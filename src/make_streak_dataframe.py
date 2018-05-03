@@ -56,7 +56,6 @@ def get_streak(gr_df, date, team):
     return streak
 
 
-
 def main():
     pd.set_option('expand_frame_repr', False)
     pd.set_option('display.max_columns', 500)
