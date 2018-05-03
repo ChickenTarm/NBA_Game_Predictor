@@ -13,6 +13,7 @@ class Data(object):
         self.team_id = {}
 
         year_count = 1
+        team_id = 1
 
         for year in os.listdir("../dataframes"):
             if not year.startswith('.'):
@@ -37,8 +38,18 @@ class Data(object):
                         self.data_dict[year]["mh_df"] = pd.read_pickle(df_path)
                 self.team_id[year] = {}
                 teams = self.data_dict[year]["gr_df"]["home"].unique()
-                for i in range(0, len(teams)):
-                    self.team_id[year][teams[i]] = i + 1
+                # for i in range(0, len(teams)):
+                #     self.team_id[year][teams[i]] = i + 1
+                for team in teams:
+                    self.team_id[year][team] = team_id
+                    team_id += 1
+
+        team_id = team_id - 1
+
+        for season in self.team_id:
+            for team in self.team_id[season]:
+                self.team_id[season][team] = self.team_id[season][team] / team_id
+        print(self.team_id)
         #
         # self.team_id = {}
         # teams = self.data_dict["2018"]["gr_df"]["home"].unique()
@@ -93,27 +104,27 @@ class Data(object):
         if form == "win_pct":
             home_hw, home_hl, home_aw, home_al, home_wp, home_streak = self.get_record_from_most_recent_games(self.data_dict[season]["tr_df"], home, date)
             away_hw, away_hl, away_aw, away_al, away_wp, away_streak = self.get_record_from_most_recent_games(self.data_dict[season]["tr_df"], away, date)
-            return [self.season_id[season], self.team_id[season][home], self.team_id[season][away], home_wp, away_wp]
+            return [self.team_id[season][home], self.team_id[season][away], home_wp, away_wp]
         if form == "record":
             home_hw, home_hl, home_aw, home_al, home_wp, home_streak = self.get_record_from_most_recent_games(self.data_dict[season]["tr_df"], home, date)
             away_hw, away_hl, away_aw, away_al, away_wp, away_streak = self.get_record_from_most_recent_games(self.data_dict[season]["tr_df"], away, date)
-            return [self.season_id[season], self.team_id[season][home], self.team_id[season][away], home_hw, home_hl, home_aw, home_al, home_wp, away_hw, away_hl, away_aw, away_al, away_wp]
+            return [self.team_id[season][home], self.team_id[season][away], home_hw, home_hl, home_aw, home_al, home_wp, away_hw, away_hl, away_aw, away_al, away_wp]
         if form == "rec_cum_stat":
             home_starters = self.get_starters_from_last_game(self.data_dict[season]["tp_df"], self.data_dict[season]["ipgs_df"], date, home)
             away_starters = self.get_starters_from_last_game(self.data_dict[season]["tp_df"], self.data_dict[season]["ipgs_df"], date, away)
             home_stats = self.get_starter_stats(self.data_dict[season]["std_df"], date, home_starters)
             away_stats = self.get_starter_stats(self.data_dict[season]["std_df"], date, away_starters)
             streak = self.get_vector(date, home, away, season, "streak")
-            return [self.season_id[season], self.team_id[season][home], self.team_id[season][away]] + streak + home_stats + away_stats
+            return [self.team_id[season][home], self.team_id[season][away]] + streak + home_stats + away_stats
         if form == "streak":
             home_hw, home_hl, home_aw, home_al, home_wp, home_streak = self.get_record_from_most_recent_games(self.data_dict[season]["tr_df"], home, date)
             away_hw, away_hl, away_aw, away_al, away_wp, away_streak = self.get_record_from_most_recent_games(self.data_dict[season]["tr_df"], away, date)
-            return [self.season_id[season], self.team_id[season][home], self.team_id[season][away], home_hw, home_hl, home_aw, home_al, home_wp, home_streak, away_hw, away_hl, away_aw, away_al, away_wp, away_streak]
+            return [self.team_id[season][home], self.team_id[season][away], home_hw, home_hl, home_aw, home_al, home_wp, home_streak, away_hw, away_hl, away_aw, away_al, away_wp, away_streak]
         if form == "matchup":
             home_hw, home_hl, home_aw, home_al, home_wp, home_streak = self.get_record_from_most_recent_games(self.data_dict[season]["tr_df"], home, date)
             away_hw, away_hl, away_aw, away_al, away_wp, away_streak = self.get_record_from_most_recent_games(self.data_dict[season]["tr_df"], away, date)
             home_mw, away_mw, home_wtd, home_ltd, home_wad, home_lad, home_pwd, home_pw, lm = self.get_matchip_history(self.data_dict[season]["mh_df"], date, home, away)
-            return [self.season_id[season], self.team_id[season][home], self.team_id[season][away], home_hw, home_hl, home_aw, home_al, home_wp, home_streak, away_hw, away_hl, away_aw, away_al, away_wp, away_streak, home_mw, away_mw, home_wtd, home_ltd, home_wad, home_lad, home_pwd, home_pw, lm]
+            return [self.team_id[season][home], self.team_id[season][away], home_hw, home_hl, home_aw, home_al, home_wp, home_streak, away_hw, away_hl, away_aw, away_al, away_wp, away_streak, home_mw, away_mw, home_wtd, home_ltd, home_wad, home_lad, home_pwd, home_pw, lm]
 
     def get_season_data(self, season, form):
         X = []
@@ -155,7 +166,7 @@ def main():
             seasons.append(year)
 
     for season in seasons:
-        form = "matchup"
+        form = "win_pct"
         X, Y = data.get_season_data(season, form)
 
         np_x = np.array(X)
